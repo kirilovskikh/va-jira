@@ -83,7 +83,7 @@ window.__vaLoadAll=async function(items){
   await Promise.all(items.map(async function(item,i){
     if(!item.key)return;
     try{
-      var d=await __vaFetch('/rest/api/2/issue/'+item.key+'?fields=summary,status,customfield_10100,customfield_10001,issuetype,project,priority,assignee,components,labels,issuelinks');
+      var d=await __vaFetch('/rest/api/2/issue/'+item.key+'?fields=summary,status,customfield_10100,customfield_10001,customfield_10002,issuetype,project,priority,assignee,components,labels,issuelinks');
       item.jira=d.fields;
       item.statusLabel=__vaSL(d.fields.status&&d.fields.status.name);
       item.isSkipStatus=__vaSkip(d.fields.status&&d.fields.status.name);
@@ -180,6 +180,7 @@ window.__vaProc=async function(item){
   }
   var body={fields:{project:{key:(f.project&&f.project.key)||'VA'},summary:'['+sl+'] '+s+' // учёт времени',issuetype:{id:f.issuetype&&f.issuetype.id},customfield_10100:item.spNew}};
   if(item.sprintId)body.fields.customfield_10001=item.sprintId;
+  if(f.customfield_10002)body.fields.customfield_10002=f.customfield_10002;
   if(f.assignee&&f.assignee.name)body.fields.assignee={name:f.assignee.name};
   if(f.priority&&f.priority.id)body.fields.priority={id:f.priority.id};
   if(f.components&&f.components.length)body.fields.components=f.components.map(function(c){return{id:c.id};});
